@@ -19,9 +19,10 @@ function getContacts() {
     });
 }
 
+const listEl = document.createElement("ul");
+listEl.className = "contacts-list";
+
 function renderContactsList() {
-  const listEl = document.createElement("ul");
-  listEl.className = "contacts-list";
   let unblockedContact = state.contacts.filter(function (contact) {
     return contact.blockContact === false;
   });
@@ -374,6 +375,8 @@ function editform(contact) {
   deleteBtn.innerText = "Delete";
 
   deleteBtn.addEventListener("click", function () {
+    let ulel = document.querySelector("ul");
+    ulel.innerHTML = "";
     deleteinfo(formel, contact);
   });
 
@@ -381,6 +384,8 @@ function editform(contact) {
   editBtn.innerText = "Edit";
 
   editBtn.addEventListener("click", function () {
+    let ulel = document.querySelector("ul");
+    ulel.innerHTML = "";
     editinfo(formel, contact);
   });
 
@@ -446,8 +451,8 @@ function editinfo(formel, contact) {
         postCode: formel.postcode.value,
       };
       state.contacts[index] = updatedcontact;
-      let ulel = document.querySelector(".contacts-list");
-      ulel.innerHTML = "";
+      // let ulel = document.querySelector(".contacts-list");
+      // ulel.innerHTML = "";
       console.log(state);
       renderContactsList();
       formel.remove();
@@ -457,16 +462,23 @@ function editinfo(formel, contact) {
 function deleteinfo(formel, contact) {
   console.log(contact);
   let identity = contact.id;
-  let index = identity - 1;
   console.log(identity);
-  fetch(`http://localhost:3000/addresses/${identity}`, {
+  fetch(`http://localhost:3000/contacts/${identity}`, {
     method: "DELETE",
-  }).then(function () {
-    // state.contacts.slice(index, identity);
-    let ulel = document.querySelector(".contacts-list");
-    ulel.innerHTML = "";
-    console.log(state);
-    renderContactsList();
-    formel.remove();
-  });
+  })
+    .then(function () {
+      fetch(`http://localhost:3000/addresses/${identity} `, {
+        method: "DELETE",
+      });
+    })
+    .then(function () {
+      const updatedstate = state.contacts.filter(function (eachcontact) {
+        return eachcontact.id !== identity;
+      });
+      state.contacts = updatedstate;
+      console.log(updatedstate);
+      console.log(state);
+      renderContactsList();
+      formel.remove();
+    });
 }
