@@ -94,3 +94,19 @@ h2 {
 .address-card h2 {
   font-size: 1.15rem;
 }
+
+.addform {
+  display: grid;
+  grid-template-rows: auto;
+  gap: 10px;
+}
+.addform label {
+  display: grid;
+}
+/* .addform input {
+  width: 100%;
+} */
+.addform .checkbox-section {
+  display: grid;
+  grid-template-columns: 10% 90%;
+}
